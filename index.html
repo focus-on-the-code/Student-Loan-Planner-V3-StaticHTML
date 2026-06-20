@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Loan Repayment Plan Estimator</title>
+  <meta name="description" content="A privacy-first static estimator foundation for comparing federal student loan repayment options.">
+  <link rel="icon" href="./assets/brand/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/tokens.css">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/charts.css">
+  <link rel="stylesheet" href="./css/utilities.css">
+  <link rel="stylesheet" href="./css/print.css" media="print">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="app">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Student Loan Repayment Plan Estimator home">
+        <img src="./assets/brand/logo-horizontal.svg" alt="Student Loan Repayment Plan Estimator">
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="./methodology.html">Methodology</a>
+        <a href="./sources.html">Sources</a>
+        <a href="./accessibility.html">Accessibility</a>
+      </nav>
+    </header>
+
+    <main id="main" class="stack">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-card">
+          <span class="eyebrow">Static foundation preview</span>
+          <h1 id="hero-title">Estimate. Compare. Plan.</h1>
+          <p class="lead">A privacy-first browser tool for estimating and comparing federal student loan repayment options. This Pass 1 foundation proves the static page structure, relative assets, and browser JavaScript loading before production repayment rules are implemented.</p>
+          <div class="actions">
+            <a class="button btn-primary" href="#demo-estimate">Start estimate preview</a>
+            <a class="button btn-secondary" href="./methodology.html">Read methodology</a>
+          </div>
+        </div>
+        <aside class="panel" aria-label="Project commitments">
+          <div class="grid-3" style="grid-template-columns:1fr;">
+            <div class="stat">
+              <div class="label">Privacy</div>
+              <div class="value">Browser only</div>
+              <p class="note">Your information stays in this browser. No analytics, tracking, accounts, or backend are planned.</p>
+            </div>
+            <div class="stat">
+              <div class="label">Deployment</div>
+              <div class="value">No build step</div>
+              <p class="note">The public site will be served directly by GitHub Pages from static files in the repository root.</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="workspace" id="demo-estimate" aria-labelledby="demo-title">
+        <form class="panel" id="demoForm">
+          <span class="chip">Temporary Pass 1 demo</span>
+          <h2 id="demo-title">Module-loading smoke test</h2>
+          <p class="note">This interaction is intentionally simple and temporary. It only verifies JavaScript modules and UI updates. It is not a repayment-plan calculation.</p>
+          <div class="input-row">
+            <label for="balanceInput">Example federal loan balance</label>
+            <input id="balanceInput" name="balanceInput" type="number" min="0" step="500" value="55000" inputmode="decimal">
+          </div>
+          <div class="input-row">
+            <label for="rateInput">Example annual interest rate</label>
+            <input id="rateInput" name="rateInput" type="number" min="0" max="30" step="0.1" value="6.8" inputmode="decimal">
+          </div>
+          <button class="btn-primary" type="submit">Update preview</button>
+        </form>
+        <section class="panel" aria-labelledby="result-title" aria-live="polite">
+          <h2 id="result-title">Preview result</h2>
+          <div class="result-card">
+            <span class="note">Estimated monthly interest only, for smoke testing</span>
+            <strong id="monthlyInterest">$311.67</strong>
+          </div>
+          <p class="disclaimer"><strong>Important:</strong> This temporary preview is not financial, tax, or legal advice and does not determine official eligibility or payment amounts. Production formulas will be implemented in a later milestone with source-backed rules and tests.</p>
+          <div class="chart-placeholder">Chart area reserved for the accessible SVG chart implementation in a later milestone.</div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© June 2026 Neon Dreams Engineering Division. Not affiliated with the U.S. Department of Education, Federal Student Aid, a loan servicer, or a financial advisory firm.</p>
+    </footer>
+  </div>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
