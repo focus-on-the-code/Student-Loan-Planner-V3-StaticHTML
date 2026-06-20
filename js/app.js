@@ -8,11 +8,12 @@ import { formatCents } from './utils/formatting.js';
 import { renderSvgLineChart } from './ui/charts/svg-line-chart.js';
 import { renderChartTable } from './ui/charts/chart-table.js';
 
-const SAMPLE = Object.freeze({ mode: 'quick', balanceDollars: 55000, interestRatePercent: 6.8, agiDollars: 65000, familySize: 1, povertyRegion: 'contiguous', pslfMonths: 24, publicService: true, loanProgram: 'direct', loanType: 'direct-unsubsidized', firstBorrowedDate: '2020-09-01', repaymentStartDate: '2021-11-01', consolidated: false, taxFilingStatus: 'single', spouseAgiDollars: 0 });
+const SAMPLE = Object.freeze({ mode: 'quick', balanceDollars: 55000, interestRatePercent: 6.8, agiDollars: 65000, familySize: 1, povertyRegion: 'contiguous', pslfMonths: 24, idrMonths: 0, publicService: true, loanProgram: 'direct', loanType: 'direct-unsubsidized', firstBorrowedDate: '2020-09-01', repaymentStartDate: '2021-11-01', consolidated: false, taxFilingStatus: 'single', spouseAgiDollars: 0, balanceUnknown: false, skipLoanDates: false, skipRepaymentHistory: false, loanNickname: 'Primary federal loan', accruedInterestDollars: 0 });
 let scenario = loadScenarioFromSession() ?? { ...SAMPLE };
 let previousScenario = null;
 let showAll = false;
 let debounce;
+let currentStep = 1;
 
 wire();
 hydrateForm();
@@ -20,7 +21,7 @@ render();
 
 function wire() {
   byId('scenarioForm').addEventListener('submit', (event) => { event.preventDefault(); updateFromForm(); });
-  for (const id of ['modeQuick','modeDetailed','balanceDollars', 'interestRatePercent', 'agiDollars', 'familySize', 'povertyRegion', 'loanProgram', 'loanType', 'firstBorrowedDate', 'repaymentStartDate', 'taxFilingStatus', 'spouseAgiDollars', 'pslfMonths', 'publicService', 'consolidated']) {
+  for (const id of ['modeQuick','modeDetailed','balanceDollars','interestRatePercent','balanceUnknown','loanProgram','loanType','firstBorrowedDate','repaymentStartDate','skipLoanDates','consolidated','agiDollars','familySize','povertyRegion','taxFilingStatus','spouseAgiDollars','pslfMonths','idrMonths','publicService','skipRepaymentHistory','loanNickname','accruedInterestDollars']) {
     byId(id).addEventListener('input', scheduleUpdate);
     byId(id).addEventListener('change', scheduleUpdate);
   }
@@ -29,6 +30,8 @@ function wire() {
   byId('resetBtn').addEventListener('click', () => { if (!confirm('Reset the estimator to a blank scenario?')) return; previousScenario = scenario; scenario = { ...SAMPLE, balanceDollars: 0, agiDollars: 0 }; hydrateForm(); persistAndRender('Reset estimate.'); });
   byId('deleteBtn').addEventListener('click', () => { if (!confirm('Delete all entered data from this browser session?')) return; clearScenarioSession(); previousScenario = null; scenario = { ...SAMPLE }; hydrateForm(); render(); setStatus('Deleted entered data from this browser session.'); });
   byId('toggleAllPlans').addEventListener('click', () => { showAll = !showAll; render(); });
+  byId('prevStepBtn').addEventListener('click', () => { currentStep = Math.max(1, currentStep - 1); renderOnboarding(); });
+  byId('nextStepBtn').addEventListener('click', () => { currentStep = Math.min(5, currentStep + 1); renderOnboarding(); });
   byId('printBtn').addEventListener('click', () => window.print());
 }
 
@@ -59,6 +62,7 @@ function readForm() {
     familySize: Number(byId('familySize').value),
     povertyRegion: byId('povertyRegion').value,
     pslfMonths: Number(byId('pslfMonths').value),
+    idrMonths: Number(byId('idrMonths').value),
     publicService: byId('publicService').checked,
     loanProgram: byId('loanProgram').value,
     loanType: byId('loanType').value,
@@ -66,7 +70,12 @@ function readForm() {
     repaymentStartDate: byId('repaymentStartDate').value,
     consolidated: byId('consolidated').checked,
     taxFilingStatus: byId('taxFilingStatus').value,
-    spouseAgiDollars: Number(byId('spouseAgiDollars').value)
+    spouseAgiDollars: Number(byId('spouseAgiDollars').value),
+    balanceUnknown: byId('balanceUnknown').checked,
+    skipLoanDates: byId('skipLoanDates').checked,
+    skipRepaymentHistory: byId('skipRepaymentHistory').checked,
+    loanNickname: byId('loanNickname').value,
+    accruedInterestDollars: Number(byId('accruedInterestDollars').value)
   };
 }
 
@@ -81,6 +90,7 @@ function hydrateForm() {
 }
 
 function render() {
+  renderOnboarding();
   const validation = validateScenario(scenario);
   byId('validationMessages').textContent = validation.errors.join(' ');
   byId('undoBtn').disabled = !previousScenario;
@@ -95,6 +105,7 @@ function render() {
   renderChart(results.plans.slice(0, 5));
   byId('planDetails').innerHTML = results.plans.slice(0, 6).map((p) => `<details><summary>${escapeHtml(p.name)} — ${label(p.eligibility.status)}</summary><p>${escapeHtml(p.summary)}</p><p>${escapeHtml(p.eligibility.reasons.join(' '))}</p></details>`).join('');
   byId('recommendations').innerHTML = results.recommendations.map((r) => `<li>${escapeHtml(r.text)}</li>`).join('');
+  renderScenarioReview();
 }
 
 function renderRows(id, plans, compact) {
@@ -117,3 +128,26 @@ function setStatus(message) { byId('liveStatus').textContent = message; byId('st
 function label(status) { return status.replace('_', ' '); }
 function title(value) { return value.charAt(0).toUpperCase() + value.slice(1); }
 function escapeHtml(str) { return String(str ?? '').replace(/[&<>"]/g, (s) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[s])); }
+
+
+function renderOnboarding() {
+  for (const step of document.querySelectorAll('[data-onboarding-step]')) step.classList.toggle('hidden', Number(step.getAttribute('data-onboarding-step')) !== currentStep);
+  for (const item of document.querySelectorAll('[data-step-indicator]')) item.classList.toggle('active', Number(item.getAttribute('data-step-indicator')) === currentStep);
+  byId('prevStepBtn').disabled = currentStep === 1;
+  byId('nextStepBtn').textContent = currentStep === 5 ? 'Review results' : 'Next';
+  document.querySelectorAll('.detailed-only').forEach((element) => element.classList.toggle('hidden', !byId('modeDetailed').checked));
+}
+
+function renderScenarioReview() {
+  const review = byId('scenarioReview');
+  if (!review) return;
+  const items = [
+    ['Mode', byId('modeDetailed').checked ? 'Detailed estimate' : 'Quick estimate'],
+    ['Balance', byId('balanceUnknown').checked ? 'Unknown balance' : formatCents(Math.round(Number(byId('balanceDollars').value || 0) * 100))],
+    ['Loan program', byId('loanProgram').value],
+    ['Income', formatCents(Math.round(Number(byId('agiDollars').value || 0) * 100))],
+    ['PSLF months', byId('pslfMonths').value || '0'],
+    ['Skipped items', [byId('skipLoanDates').checked ? 'loan dates' : '', byId('skipRepaymentHistory').checked ? 'repayment history' : ''].filter(Boolean).join(', ') || 'None']
+  ];
+  review.innerHTML = items.map(([labelText, value]) => `<div class="review-item"><strong>${escapeHtml(labelText)}:</strong> ${escapeHtml(value)}</div>`).join('');
+}
