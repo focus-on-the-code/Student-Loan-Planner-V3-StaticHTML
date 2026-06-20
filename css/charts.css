@@ -1,0 +1,10 @@
+.chart-placeholder { border: 1px dashed rgba(35,79,188,.35); border-radius: 18px; padding: 18px; background: rgba(255,255,255,.55); color: var(--muted); }
+.charts-panel { display: grid; gap: 1rem; margin: 1.5rem 0; }
+.chart-card { border: 1px solid var(--line); border-radius: 1rem; padding: 1rem; background: rgba(255,255,255,.72); }
+.chart-callout { border: 1px solid #9fb2d4; border-radius: .85rem; padding: .75rem; background: #f8fbff; color: #12204a; font-weight: 700; }
+.chart-point { cursor: pointer; outline: none; transition: r .16s ease, opacity .16s ease; }
+.chart-point:hover, .chart-point:focus, .chart-point.active { r: 8; stroke: #12204a; stroke-width: 3; }
+.interactive-chart.has-active-point .chart-line, .interactive-chart.has-active-point .chart-point { opacity: .25; }
+.interactive-chart.has-active-point .chart-line.active, .interactive-chart.has-active-point .chart-point.active { opacity: 1; }
+.chart-line { transition: opacity .16s ease, stroke-width .16s ease; }
+.chart-line.active { stroke-width: 6; }
