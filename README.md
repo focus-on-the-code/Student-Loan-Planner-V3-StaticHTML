@@ -30,3 +30,21 @@ Folder: /(root)
 ```
 
 No build command, package install, or custom deployment workflow is required.
+
+## Test artifacts
+
+Milestone verification reports are committed under `docs/test-reports/`. For Milestone 2 domain checks, run:
+
+```bash
+node --test tests/unit/*.test.js
+```
+
+The browser test harness is available at:
+
+```text
+http://localhost:8000/tests/test-runner.html
+```
+
+## Current app scope
+
+The estimator now runs as a static browser app with quick aggregate inputs, live plan comparisons, session recovery, undo/reset/delete-all controls, SVG chart output, and print support. It remains an educational estimator and not an official eligibility, tax, legal, or financial determination.

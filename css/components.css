@@ -27,3 +27,11 @@ h3 { margin: 0 0 8px; }
 .result-card { border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.74); padding: 16px; }
 .result-card strong { display: block; font-size: 1.75rem; margin-top: 4px; }
 .chip { display: inline-flex; width: fit-content; border-radius: 999px; padding: 6px 10px; background: rgba(91,200,255,.18); color: #1e416f; font-size: .82rem; font-weight: 800; }
+select { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: rgba(255,255,255,.92); color: var(--text); }
+.table-wrap { overflow-x: auto; margin: 12px 0 18px; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; background: rgba(255,255,255,.72); border-radius: 16px; overflow: hidden; }
+th, td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { background: rgba(91,200,255,.16); font-size: .9rem; }
+.btn-danger { background: linear-gradient(135deg, #ffd6e7, #ffe9f2); color: #7b1f49; border: 1px solid rgba(180,59,99,.18); }
+svg.payment-chart { width: 100%; min-height: 220px; }
+svg.payment-chart text { fill: var(--muted); font-size: 12px; }
