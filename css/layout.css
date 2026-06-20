@@ -1,0 +1,16 @@
+.app { position: relative; max-width: 1180px; margin: 0 auto; padding: 28px 20px 56px; }
+.site-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 22px; }
+.brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: 850; }
+.brand img { width: min(280px, 64vw); }
+.nav { display: flex; flex-wrap: wrap; gap: 10px; }
+.nav a { border: 1px solid var(--line); border-radius: 999px; padding: 9px 12px; background: rgba(255,255,255,.7); text-decoration: none; font-weight: 700; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .85fr); gap: 20px; align-items: stretch; }
+.stack { display: grid; gap: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.workspace { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 18px; align-items: start; margin-top: 18px; }
+.site-footer { margin-top: 36px; color: var(--muted); font-size: .95rem; }
+@media (max-width: 860px) {
+  .site-header, .hero, .workspace { grid-template-columns: 1fr; }
+  .site-header { align-items: flex-start; flex-direction: column; }
+  .grid-3 { grid-template-columns: 1fr; }
+}
