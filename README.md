@@ -30,17 +30,3 @@ Folder: /(root)
 ```
 
 No build command, package install, or custom deployment workflow is required.
-
-## Test artifacts
-
-Milestone verification reports are committed under `docs/test-reports/`. For Milestone 2 domain checks, run:
-
-```bash
-node --test tests/unit/*.test.js
-```
-
-The browser test harness is available at:
-
-```text
-http://localhost:8000/tests/test-runner.html
-```
