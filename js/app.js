@@ -33,6 +33,12 @@ function wire() {
   byId('prevStepBtn').addEventListener('click', () => { currentStep = Math.max(1, currentStep - 1); renderOnboarding(); });
   byId('nextStepBtn').addEventListener('click', () => { currentStep = Math.min(5, currentStep + 1); renderOnboarding(); });
   byId('printBtn').addEventListener('click', () => window.print());
+  for (const button of document.querySelectorAll('[data-help]')) {
+    button.addEventListener('mouseenter', showHeaderHelp);
+    button.addEventListener('focus', showHeaderHelp);
+    button.addEventListener('click', showHeaderHelp);
+    button.addEventListener('touchstart', showHeaderHelp, { passive: true });
+  }
 }
 
 function scheduleUpdate() {
@@ -97,10 +103,12 @@ function render() {
   const results = calculateScenario(scenario);
   byId('qualityStat').textContent = title(results.estimateQuality);
   byId('lowestPayment').textContent = results.topPlans[0] ? formatCents(results.topPlans[0].monthlyPaymentNowCents) : '—';
+  byId('sortSummary').textContent = results.topPlans.length ? `Cheapest clearly eligible plan: ${results.topPlans[0].name}. Sorting reruns after every input change.` : 'No clearly eligible plan is available yet; add more loan details to improve eligibility confidence.';
+  byId('topPlanNote').textContent = results.topPlans.length < 3 ? 'Fewer than three plans appear clearly eligible from the current entries. Potential options remain in Show all plans with missing-info notes.' : 'Only clearly eligible plans appear here. Potentially eligible and informational plans are excluded from the default top three.';
   renderRows('topPlanRows', results.topPlans, true);
-  renderRows('allPlanRows', results.plans, false);
+  renderGroupedRows(results.plans);
   byId('allPlansWrap').classList.toggle('hidden', !showAll);
-  byId('toggleAllPlans').textContent = showAll ? 'Hide all plans' : 'Show all plans';
+  byId('toggleAllPlans').textContent = showAll ? 'Show top 3' : 'Show all plans';
   byId('assumptions').innerHTML = results.assumptions.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
   renderChart(results.plans.slice(0, 5));
   byId('planDetails').innerHTML = results.plans.slice(0, 6).map((p) => `<details><summary>${escapeHtml(p.name)} — ${label(p.eligibility.status)}</summary><p>${escapeHtml(p.summary)}</p><p>${escapeHtml(p.eligibility.reasons.join(' '))}</p></details>`).join('');
@@ -109,7 +117,26 @@ function render() {
 }
 
 function renderRows(id, plans, compact) {
-  byId(id).innerHTML = plans.map((plan) => `<tr><td><strong>${escapeHtml(plan.name)}</strong><br><span class="note">${escapeHtml(plan.summary)}</span></td><td>${label(plan.eligibility.status)}</td><td>${formatCents(plan.monthlyPaymentNowCents)}</td><td>${formatCents(compact ? plan.totalBorrowerPaymentsCents : plan.annualPaymentNowCents)}</td><td>${compact ? formatCents(plan.estimatedForgivenessCents) : escapeHtml(plan.eligibility.reasons.join(' '))}</td></tr>`).join('');
+  byId(id).innerHTML = plans.map((plan) => planRow(plan, compact)).join('');
+}
+
+function renderGroupedRows(plans) {
+  const groups = [
+    ['Other eligible plans', plans.filter((plan) => plan.eligibility.status === 'clearly_eligible')],
+    ['Potentially eligible plans', plans.filter((plan) => plan.eligibility.status === 'potentially_eligible' && plan.planId !== 'alternative-repayment')],
+    ['Unavailable or informational plans', plans.filter((plan) => ['unavailable', 'informational'].includes(plan.eligibility.status) || plan.planId === 'alternative-repayment')],
+    ['Not eligible based on entries', plans.filter((plan) => plan.eligibility.status === 'ineligible')]
+  ];
+  byId('allPlanRows').innerHTML = groups.filter(([, groupPlans]) => groupPlans.length).map(([name, groupPlans]) => `<tr class="group-row"><th colspan="5">${escapeHtml(name)}</th></tr>${groupPlans.map((plan) => planRow(plan, false)).join('')}`).join('');
+}
+
+function planRow(plan, compact) {
+  return `<tr><td><strong>${escapeHtml(plan.name)}</strong><br><span class="note">${escapeHtml(plan.summary)}</span></td><td>${label(plan.eligibility.status)}</td><td>${formatCents(plan.monthlyPaymentNowCents)}</td><td>${formatCents(compact ? plan.totalBorrowerPaymentsCents : plan.annualPaymentNowCents)}</td><td>${compact ? formatCents(plan.estimatedForgivenessCents) : renderPlanNote(plan)}</td></tr>`;
+}
+
+function renderPlanNote(plan) {
+  const missing = plan.eligibility.missingFields?.length ? ` Missing: ${plan.eligibility.missingFields.join(', ')}.` : '';
+  return escapeHtml(`${plan.eligibility.reasons.join(' ')}${missing}`);
 }
 
 function renderChart(plans) {
@@ -124,8 +151,13 @@ function renderChart(plans) {
   byId('chartTable').innerHTML = renderChartTable(plans);
 }
 
+function showHeaderHelp(event) {
+  const target = event.currentTarget;
+  if (!(target instanceof HTMLElement)) return;
+  byId('tableHelp').textContent = target.dataset.help || '';
+}
 function setStatus(message) { byId('liveStatus').textContent = message; byId('statusChip').textContent = message; }
-function label(status) { return status.replace('_', ' '); }
+function label(status) { return ({ clearly_eligible: 'Appears eligible', potentially_eligible: 'Potentially eligible', ineligible: 'Not eligible based on entries', unavailable: 'Unavailable or informational', informational: 'Unavailable or informational' }[status] || status.replace('_', ' ')); }
 function title(value) { return value.charAt(0).toUpperCase() + value.slice(1); }
 function escapeHtml(str) { return String(str ?? '').replace(/[&<>"]/g, (s) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[s])); }
 

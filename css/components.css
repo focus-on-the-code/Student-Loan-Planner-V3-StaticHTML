@@ -47,3 +47,7 @@ svg.payment-chart text { fill: var(--muted); font-size: 12px; }
 .assumption-list { display: grid; gap: .5rem; }
 .review-item { border: 1px solid #d7deef; border-radius: .75rem; padding: .55rem .7rem; }
 @media (min-width: 760px) { .stepper { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.info-button { width: 1.45rem; min-height: 1.45rem; border-radius: 999px; padding: 0; margin-left: .25rem; font-size: .8rem; line-height: 1; background: #fff; border: 1px solid #9fb2d4; color: #17315f; }
+.table-help { min-height: 2.25rem; border: 1px solid #d7deef; border-radius: .75rem; padding: .55rem .7rem; background: #f8fbff; color: #263451; margin: .5rem 0 1rem; }
+.table-help:empty { display: none; }
+.group-row th { background: #eef6ff; color: #12204a; font-size: .95rem; text-transform: uppercase; letter-spacing: .04em; }

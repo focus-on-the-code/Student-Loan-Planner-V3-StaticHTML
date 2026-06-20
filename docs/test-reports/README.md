@@ -8,3 +8,4 @@ This directory contains committed Markdown verification artifacts for implementa
 | 0002 Engine foundations | `0002-engine-foundations.md` | Pass with scope warnings | Node tests pass; ICR/eligibility scaffolds deferred |
 | 0003 Full estimator YOLO | `0003-full-estimator-yolo.md` | Pass with YOLO warnings | Runnable estimator; 20 Node tests pass; browser automation unavailable |
 | 0005 Phase 1 onboarding | `0005-phase-1-onboarding.md` | Pass | Five-step onboarding shell, skip/unknown controls, and local checks |
+| 0006 Phase 2 results workspace | `0006-phase-2-results-workspace.md` | Pass | Table help controls, grouped all-plan sections, and deterministic ranking tie-breaker |
