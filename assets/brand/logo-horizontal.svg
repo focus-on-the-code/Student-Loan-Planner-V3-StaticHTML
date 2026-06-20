@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" role="img" aria-labelledby="title desc">
+  <title id="title">Student Loan Repayment Plan Estimator</title>
+  <desc id="desc">Brand-neutral repayment path logo and wordmark.</desc>
+  <rect x="8" y="12" width="96" height="96" rx="24" fill="#13203f"/>
+  <circle cx="76" cy="40" r="12" fill="#ffe782"/>
+  <path d="M26 80c16-24 34-34 60-42" fill="none" stroke="#5bc8ff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M26 88c18-16 36-22 60-24" fill="none" stroke="#ff76c7" stroke-width="7" stroke-linecap="round"/>
+  <path d="M26 96c20-8 40-8 60-4" fill="none" stroke="#ffb15c" stroke-width="7" stroke-linecap="round"/>
+  <text x="124" y="52" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="800" fill="#13203f">Student Loan</text>
+  <text x="124" y="84" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#2e3f68">Repayment Plan Estimator</text>
+</svg>
