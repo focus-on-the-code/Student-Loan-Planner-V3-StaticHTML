@@ -33,6 +33,11 @@ function wire() {
   byId('prevStepBtn').addEventListener('click', () => { currentStep = Math.max(1, currentStep - 1); renderOnboarding(); });
   byId('nextStepBtn').addEventListener('click', () => { currentStep = Math.min(5, currentStep + 1); renderOnboarding(); });
   byId('printBtn').addEventListener('click', () => window.print());
+  document.addEventListener('mouseover', handleChartPoint);
+  document.addEventListener('focusin', handleChartPoint);
+  document.addEventListener('click', handleChartPoint);
+  document.addEventListener('touchstart', handleChartPoint, { passive: true });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') clearChartCallout(); });
   for (const button of document.querySelectorAll('[data-help]')) {
     button.addEventListener('mouseenter', showHeaderHelp);
     button.addEventListener('focus', showHeaderHelp);
@@ -110,7 +115,7 @@ function render() {
   byId('allPlansWrap').classList.toggle('hidden', !showAll);
   byId('toggleAllPlans').textContent = showAll ? 'Show top 3' : 'Show all plans';
   byId('assumptions').innerHTML = results.assumptions.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
-  renderChart(results.plans.slice(0, 5));
+  renderCharts(results.topPlans.length ? results.topPlans.slice(0, 4) : results.plans.filter((plan) => plan.eligibility.status === 'clearly_eligible').slice(0, 4));
   byId('planDetails').innerHTML = results.plans.slice(0, 6).map((p) => `<details><summary>${escapeHtml(p.name)} — ${label(p.eligibility.status)}</summary><p>${escapeHtml(p.summary)}</p><p>${escapeHtml(p.eligibility.reasons.join(' '))}</p></details>`).join('');
   byId('recommendations').innerHTML = results.recommendations.map((r) => `<li>${escapeHtml(r.text)}</li>`).join('');
   renderScenarioReview();
@@ -139,16 +144,31 @@ function renderPlanNote(plan) {
   return escapeHtml(`${plan.eligibility.reasons.join(' ')}${missing}`);
 }
 
-function renderChart(plans) {
-  const max = Math.max(1, ...plans.flatMap((plan) => plan.yearly.slice(0, 10).map((year) => year.paymentCents)));
-  const width = 720, height = 240, pad = 34;
-  const polylines = plans.map((plan, index) => {
-    const points = plan.yearly.slice(0, 10).map((year, i) => `${pad + i * ((width - pad * 2) / 9)},${height - pad - (year.paymentCents / max) * (height - pad * 2)}`).join(' ');
-    const colors = ['#2e8cff', '#ff76c7', '#ffb15c', '#8f73ff', '#1a8e66'];
-    return `<polyline points="${points}" fill="none" stroke="${colors[index % colors.length]}" stroke-width="4"/><text x="${pad}" y="${20 + index * 16}">${escapeHtml(plan.name)}</text>`;
-  }).join('');
-  byId('chart').innerHTML = renderSvgLineChart(plans);
-  byId('chartTable').innerHTML = renderChartTable(plans);
+function renderCharts(plans) {
+  byId('annualChart').innerHTML = renderSvgLineChart(plans, { metric: 'paymentCents', label: 'Annual payment path chart' });
+  byId('annualChartTable').innerHTML = renderChartTable(plans, { metric: 'paymentCents', label: 'Annual payment data table' });
+  byId('balanceChart').innerHTML = renderSvgLineChart(plans, { metric: 'balanceCents', label: 'Remaining balance path chart' });
+  byId('balanceChartTable').innerHTML = renderChartTable(plans, { metric: 'balanceCents', label: 'Remaining balance data table' });
+}
+
+function handleChartPoint(event) {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  const point = target.closest('.chart-point');
+  if (!point) return;
+  const callout = point.getAttribute('data-callout') || '';
+  byId('chartCallout').textContent = callout;
+  document.querySelectorAll('.interactive-chart').forEach((chart) => chart.classList.add('has-active-point'));
+  document.querySelectorAll('.chart-point.active, .chart-line.active').forEach((element) => element.classList.remove('active'));
+  point.classList.add('active');
+  const planId = point.getAttribute('data-plan-id');
+  if (planId) document.querySelectorAll(`.chart-line[data-plan-id="${CSS.escape(planId)}"]`).forEach((line) => line.classList.add('active'));
+}
+
+function clearChartCallout() {
+  byId('chartCallout').textContent = 'Select a chart point to see plan, year, and value.';
+  document.querySelectorAll('.interactive-chart').forEach((chart) => chart.classList.remove('has-active-point'));
+  document.querySelectorAll('.chart-point.active, .chart-line.active').forEach((element) => element.classList.remove('active'));
 }
 
 function showHeaderHelp(event) {

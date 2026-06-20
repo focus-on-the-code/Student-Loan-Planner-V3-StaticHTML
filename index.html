@@ -129,8 +129,21 @@
           <div class="table-wrap"><table><thead><tr><th>Plan <button class="info-button" type="button" data-help="The federal repayment option being estimated.">?</button></th><th>Eligibility <button class="info-button" type="button" data-help="Whether the plan appears available based on your entries.">?</button></th><th>Monthly now <button class="info-button" type="button" data-help="Estimated required monthly payment using today’s inputs.">?</button></th><th>Total paid <button class="info-button" type="button" data-help="Projected borrower payments over the modeled path.">?</button></th><th>Forgiveness <button class="info-button" type="button" data-help="Projected remaining balance forgiven, before tax assumptions.">?</button></th></tr></thead><tbody id="topPlanRows"></tbody></table></div><p class="note" id="topPlanNote"></p><div id="tableHelp" class="table-help" role="status" aria-live="polite"></div>
           <button class="btn-secondary" id="toggleAllPlans" type="button">Show all plans</button>
           <div id="allPlansWrap" class="hidden"><h3>All modeled plans</h3><p class="note">Grouped by eligibility status so potentially eligible or unavailable plans do not occupy the default top-three positions.</p><div class="table-wrap"><table><thead><tr><th>Plan <button class="info-button" type="button" data-help="The federal repayment option being estimated.">?</button></th><th>Eligibility <button class="info-button" type="button" data-help="Whether the plan appears available based on your entries.">?</button></th><th>Monthly now <button class="info-button" type="button" data-help="Estimated required monthly payment using today’s inputs.">?</button></th><th>Annual now <button class="info-button" type="button" data-help="Estimated payments during the first 12 months.">?</button></th><th>Notes <button class="info-button" type="button" data-help="Missing information, disqualifying facts, or plan caveats.">?</button></th></tr></thead><tbody id="allPlanRows"></tbody></table></div></div>
-          <h3>Annual payment path</h3>
-          <div id="chart" class="chart-placeholder"></div><div id="chartTable" class="table-wrap" aria-label="Accessible chart data table"></div>
+          <section class="charts-panel" aria-labelledby="charts-title">
+            <h3 id="charts-title">Charts</h3>
+            <p class="note">Charts default to the top eligible plans. Hover, focus, click, or tap a point to see the exact annual value.</p>
+            <div class="chart-callout" id="chartCallout" role="status" aria-live="polite">Select a chart point to see plan, year, and value.</div>
+            <article class="chart-card" aria-labelledby="annual-chart-title">
+              <h4 id="annual-chart-title">Annual payment path</h4>
+              <div id="annualChart" class="chart-placeholder"></div>
+              <details><summary>View annual payment data table</summary><div id="annualChartTable" class="table-wrap" aria-label="Annual payment data table"></div></details>
+            </article>
+            <article class="chart-card" aria-labelledby="balance-chart-title">
+              <h4 id="balance-chart-title">Remaining balance path</h4>
+              <div id="balanceChart" class="chart-placeholder"></div>
+              <details><summary>View remaining balance data table</summary><div id="balanceChartTable" class="table-wrap" aria-label="Remaining balance data table"></div></details>
+            </article>
+          </section>
           <h3>Plan details</h3><div id="planDetails" class="plan-details"></div><h3>Recommendations</h3><ul id="recommendations"></ul><h3>Assumptions</h3>
           <ul id="assumptions"></ul>
           <p class="disclaimer"><strong>Important:</strong> This tool provides estimates for educational and planning purposes only. It is not financial, tax, or legal advice and does not determine official eligibility, payment amounts, qualifying payment counts, or forgiveness.</p>

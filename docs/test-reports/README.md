@@ -9,3 +9,4 @@ This directory contains committed Markdown verification artifacts for implementa
 | 0003 Full estimator YOLO | `0003-full-estimator-yolo.md` | Pass with YOLO warnings | Runnable estimator; 20 Node tests pass; browser automation unavailable |
 | 0005 Phase 1 onboarding | `0005-phase-1-onboarding.md` | Pass | Five-step onboarding shell, skip/unknown controls, and local checks |
 | 0006 Phase 2 results workspace | `0006-phase-2-results-workspace.md` | Pass | Table help controls, grouped all-plan sections, and deterministic ranking tie-breaker |
+| 0007 Phase 3 charts | `0007-phase-3-charts.md` | Pass | Two SVG charts, data-table alternatives, and hover/focus/click/touch callouts |
