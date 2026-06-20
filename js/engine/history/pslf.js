@@ -1,0 +1,4 @@
+// @ts-check
+import { normalizePaymentHistory } from './payment-history.js';
+import { projectedCompletionMonth, remainingQualifyingPayments } from './qualifying-payments.js';
+export function estimatePslf(scenario, projection) { const history = normalizePaymentHistory(scenario); if (!history.publicService) return { canEstimate: false, reason: 'Public-service employment was not selected.' }; const remaining = remainingQualifyingPayments(history.pslfMonths); const month = Math.min(remaining, projection.projectedResolutionMonth); return { canEstimate: true, startingQualifyingPayments: history.pslfMonths, remainingQualifyingPayments: remaining, projectedCompletionMonth: month, pslfAdjustedPaymentsCents: projection.monthlyPaymentNowCents * month, projectedForgivenBalanceCents: month <= projection.projectedResolutionMonth ? (projection.monthly?.[month - 1]?.endingBalanceCents ?? projection.estimatedForgivenessCents) : 0 }; }
