@@ -12,3 +12,8 @@ export function formatCurrency(value) {
     maximumFractionDigits: 2
   }).format(Number.isFinite(value) ? value : 0);
 }
+
+/** @param {number} cents */
+export function formatCents(cents) {
+  return formatCurrency(cents / 100);
+}
