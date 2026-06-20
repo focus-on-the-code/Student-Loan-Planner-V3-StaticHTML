@@ -1,10 +1,12 @@
 # Student Loan Repayment Plan Estimator
 
-A privacy-first static web app for estimating and comparing federal student loan repayment options.
+A privacy-first, no-build static web app for estimating and comparing federal student loan repayment options. The app runs entirely in the browser and is designed for GitHub Pages deployment from repository files.
 
-## Current status
+## Status
 
-This repository is in **Pass 1: Static foundation and deployment proof**. The current site proves that the root HTML pages, relative assets, CSS, and browser-native JavaScript modules load without a build step. The temporary preview interaction on `index.html` is not a production repayment calculation.
+The static foundation, estimator UI, modular calculation engine, versioned rules, monthly simulation scaffolding, PSLF handling, rankings, recommendations, browser-session recovery, undo/reset/delete controls, support pages, and verification artifacts are implemented for public-beta review.
+
+The estimator is educational planning software. It does not determine official eligibility, payment amounts, tax treatment, qualifying payment counts, or forgiveness. Borrowers should confirm official outcomes with Federal Student Aid, their servicer, and qualified tax/legal advisors.
 
 ## Local preview
 
@@ -12,39 +14,36 @@ This repository is in **Pass 1: Static foundation and deployment proof**. The cu
 python3 -m http.server 8000
 ```
 
-Then open:
+Open `http://127.0.0.1:8000/`.
 
-```text
-http://localhost:8000/
-```
-
-## Deployment model
-
-GitHub Pages should be configured as:
-
-```text
-Settings -> Pages -> Build and deployment
-Source: Deploy from a branch
-Branch: main
-Folder: /(root)
-```
-
-No build command, package install, or custom deployment workflow is required.
-
-## Test artifacts
-
-Milestone verification reports are committed under `docs/test-reports/`. For Milestone 2 domain checks, run:
+## Verification
 
 ```bash
-node --test tests/unit/*.test.js
+node --test tests/unit/*.test.js tests/official-examples/*.test.js
 ```
 
-The browser test harness is available at:
-
-```text
-http://localhost:8000/tests/test-runner.html
+```bash
+python3 -m http.server 8000
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8000/
 ```
 
-## Current app scope
+Detailed verification artifacts live in `docs/test-reports/`.
 
-The estimator now runs as a static browser app with quick aggregate inputs, live plan comparisons, session recovery, undo/reset/delete-all controls, SVG chart output, and print support. It remains an educational estimator and not an official eligibility, tax, legal, or financial determination.
+## Architecture commitments
+
+- No framework.
+- No production package dependencies.
+- No build step.
+- Relative URLs for GitHub Pages subpath compatibility.
+- Source-backed rule and formula modules.
+- Browser-only state; no analytics, backend, accounts, or tracking.
+
+## Documentation
+
+- `docs/PRD.md`
+- `docs/architecture.md`
+- `docs/calculation-methodology.md`
+- `docs/rules-maintenance.md`
+- `docs/testing.md`
+- `docs/deployment.md`
+- `docs/source-register.md`
