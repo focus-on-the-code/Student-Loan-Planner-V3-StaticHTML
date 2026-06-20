@@ -1,5 +1,3 @@
-> **SUPERSEDED:** This report is retained for history. It has been replaced by `0004-prd-completion.md` because the prior YOLO pass did not complete detailed PRD requirements.
-
 # Test Report: 0003 Full Estimator YOLO Integration
 
 ## Metadata
