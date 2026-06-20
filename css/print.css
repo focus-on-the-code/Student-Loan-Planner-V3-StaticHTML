@@ -1,0 +1,7 @@
+@media print {
+  body { background: #fff; color: #000; }
+  body::before, .nav, .actions, .skip-link { display: none !important; }
+  .app { max-width: none; padding: 0; }
+  .panel, .hero-card { box-shadow: none; border: 1px solid #999; break-inside: avoid; }
+  a { color: #000; text-decoration: underline; }
+}
