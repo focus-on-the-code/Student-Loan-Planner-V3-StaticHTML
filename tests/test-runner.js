@@ -4,7 +4,6 @@ import { dollarsToCents, centsToDollars, monthlyInterestCents, multiplyCents } f
 import { povertyGuidelineDollars, povertyGuidelineCentsAtPercent } from '../js/rules/annual/2026/poverty-guidelines.js';
 import { findSourceById } from '../js/rules/sources.js';
 import { isRuleReviewStale, selectRuleSet } from '../js/rules/rule-version.js';
-import { calculateScenario } from '../js/engine/calculate-scenario.js';
 
 const tests = [];
 
@@ -27,7 +26,6 @@ test('poverty guideline percent returns cents', () => equal(povertyGuidelineCent
 test('source registry finds poverty source', () => ok(findSourceById('fr-2026-poverty-guidelines')));
 test('rule selection returns active metadata', () => equal(selectRuleSet('2026-07-01').id, '2026-07-01'));
 test('rule staleness detects current baseline freshness', () => equal(isRuleReviewStale('2026-06-20'), false));
-test('scenario calculation returns plans', () => equal(calculateScenario({ balanceDollars: 55000, interestRatePercent: 6.8, agiDollars: 65000, familySize: 1, povertyRegion: 'contiguous', pslfMonths: 24, publicService: true }).plans.length, 8));
 
 const results = [];
 for (const item of tests) {

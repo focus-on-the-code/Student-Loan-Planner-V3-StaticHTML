@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Student Loan Repayment Plan Estimator</title>
-  <meta name="description" content="A privacy-first static estimator for comparing federal student loan repayment options.">
+  <meta name="description" content="A privacy-first static estimator foundation for comparing federal student loan repayment options.">
   <link rel="icon" href="./assets/brand/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/tokens.css">
   <link rel="stylesheet" href="./css/base.css">
@@ -31,55 +31,60 @@
     <main id="main" class="stack">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-card">
-          <span class="eyebrow">Public beta estimator</span>
+          <span class="eyebrow">Static foundation preview</span>
           <h1 id="hero-title">Estimate. Compare. Plan.</h1>
-          <p class="lead">Compare federal student loan repayment paths in this browser. Start with a quick estimate, then adjust assumptions live without sending your information anywhere.</p>
+          <p class="lead">A privacy-first browser tool for estimating and comparing federal student loan repayment options. This Pass 1 foundation proves the static page structure, relative assets, and browser JavaScript loading before production repayment rules are implemented.</p>
           <div class="actions">
-            <a class="button btn-primary" href="#estimator">Start estimate</a>
-            <button class="btn-secondary" id="loadSampleBtn" type="button">Use sample scenario</button>
-            <button class="btn-secondary" id="printBtn" type="button">Print report</button>
+            <a class="button btn-primary" href="#demo-estimate">Start estimate preview</a>
+            <a class="button btn-secondary" href="./methodology.html">Read methodology</a>
           </div>
         </div>
         <aside class="panel" aria-label="Project commitments">
-          <div class="stat"><div class="label">Privacy</div><div class="value">Browser only</div><p class="note">Scenario data is saved only to session storage for refresh recovery. Delete all data clears it.</p></div>
-          <div class="stat"><div class="label">Estimate quality</div><div class="value" id="qualityStat">Basic</div><p class="note">More complete inputs improve confidence, but official eligibility must be confirmed with Federal Student Aid or your servicer.</p></div>
+          <div class="grid-3" style="grid-template-columns:1fr;">
+            <div class="stat">
+              <div class="label">Privacy</div>
+              <div class="value">Browser only</div>
+              <p class="note">Your information stays in this browser. No analytics, tracking, accounts, or backend are planned.</p>
+            </div>
+            <div class="stat">
+              <div class="label">Deployment</div>
+              <div class="value">No build step</div>
+              <p class="note">The public site will be served directly by GitHub Pages from static files in the repository root.</p>
+            </div>
+          </div>
         </aside>
       </section>
 
-      <section class="workspace" id="estimator" aria-labelledby="form-title">
-        <form class="panel" id="scenarioForm">
-          <span class="chip">Quick estimate</span>
-          <h2 id="form-title">Your scenario</h2>
-          <div id="validationMessages" class="note" role="alert"></div>
-          <div class="input-row"><label for="balanceDollars">Federal loan balance</label><input id="balanceDollars" type="number" min="0" step="500" value="55000" inputmode="decimal"></div>
-          <div class="input-row"><label for="interestRatePercent">Average interest rate</label><input id="interestRatePercent" type="number" min="0" max="30" step="0.1" value="6.8" inputmode="decimal"></div>
-          <div class="input-row"><label for="agiDollars">Adjusted gross income</label><input id="agiDollars" type="number" min="0" step="1000" value="65000" inputmode="decimal"></div>
-          <div class="input-row"><label for="familySize">Family size</label><input id="familySize" type="number" min="1" step="1" value="1" inputmode="numeric"></div>
-          <div class="input-row"><label for="povertyRegion">Poverty guideline region</label><select id="povertyRegion"><option value="contiguous">Contiguous states/DC</option><option value="alaska">Alaska</option><option value="hawaii">Hawaii</option></select></div>
-          <div class="input-row"><label for="pslfMonths">Current PSLF qualifying months</label><input id="pslfMonths" type="number" min="0" max="120" step="1" value="24" inputmode="numeric"></div>
-          <label class="input-row"><span><input id="publicService" type="checkbox" checked> Expect qualifying public-service employment</span></label>
-          <div class="actions"><button class="btn-primary" type="submit">Update estimate</button><button class="btn-secondary" id="undoBtn" type="button" disabled>Undo</button><button class="btn-secondary" id="resetBtn" type="button">Reset</button><button class="btn-danger" id="deleteBtn" type="button">Delete all entered data</button></div>
+      <section class="workspace" id="demo-estimate" aria-labelledby="demo-title">
+        <form class="panel" id="demoForm">
+          <span class="chip">Temporary Pass 1 demo</span>
+          <h2 id="demo-title">Module-loading smoke test</h2>
+          <p class="note">This interaction is intentionally simple and temporary. It only verifies JavaScript modules and UI updates. It is not a repayment-plan calculation.</p>
+          <div class="input-row">
+            <label for="balanceInput">Example federal loan balance</label>
+            <input id="balanceInput" name="balanceInput" type="number" min="0" step="500" value="55000" inputmode="decimal">
+          </div>
+          <div class="input-row">
+            <label for="rateInput">Example annual interest rate</label>
+            <input id="rateInput" name="rateInput" type="number" min="0" max="30" step="0.1" value="6.8" inputmode="decimal">
+          </div>
+          <button class="btn-primary" type="submit">Update preview</button>
         </form>
-
-        <section class="panel" aria-labelledby="results-title">
-          <span class="chip" id="statusChip">Ready</span>
-          <h2 id="results-title">Results</h2>
-          <div id="liveStatus" class="visually-hidden" aria-live="polite"></div>
-          <div class="result-card"><span class="note">Lowest estimated current monthly payment</span><strong id="lowestPayment">—</strong></div>
-          <h3>Top eligible plans</h3>
-          <div class="table-wrap"><table><thead><tr><th>Plan</th><th>Status</th><th>Monthly</th><th>Total paid</th><th>Forgiveness</th></tr></thead><tbody id="topPlanRows"></tbody></table></div>
-          <button class="btn-secondary" id="toggleAllPlans" type="button">Show all plans</button>
-          <div id="allPlansWrap" class="hidden"><h3>All modeled plans</h3><div class="table-wrap"><table><thead><tr><th>Plan</th><th>Status</th><th>Monthly</th><th>Annual</th><th>Notes</th></tr></thead><tbody id="allPlanRows"></tbody></table></div></div>
-          <h3>Annual payment path</h3>
-          <div id="chart" class="chart-placeholder"></div>
-          <h3>Assumptions</h3>
-          <ul id="assumptions"></ul>
-          <p class="disclaimer"><strong>Important:</strong> This tool provides estimates for educational and planning purposes only. It is not financial, tax, or legal advice and does not determine official eligibility, payment amounts, qualifying payment counts, or forgiveness.</p>
+        <section class="panel" aria-labelledby="result-title" aria-live="polite">
+          <h2 id="result-title">Preview result</h2>
+          <div class="result-card">
+            <span class="note">Estimated monthly interest only, for smoke testing</span>
+            <strong id="monthlyInterest">$311.67</strong>
+          </div>
+          <p class="disclaimer"><strong>Important:</strong> This temporary preview is not financial, tax, or legal advice and does not determine official eligibility or payment amounts. Production formulas will be implemented in a later milestone with source-backed rules and tests.</p>
+          <div class="chart-placeholder">Chart area reserved for the accessible SVG chart implementation in a later milestone.</div>
         </section>
       </section>
     </main>
 
-    <footer class="site-footer"><p>© June 2026 Neon Dreams Engineering Division. Not affiliated with the U.S. Department of Education, Federal Student Aid, a loan servicer, or a financial advisory firm.</p></footer>
+    <footer class="site-footer">
+      <p>© June 2026 Neon Dreams Engineering Division. Not affiliated with the U.S. Department of Education, Federal Student Aid, a loan servicer, or a financial advisory firm.</p>
+    </footer>
   </div>
   <script type="module" src="./js/app.js"></script>
 </body>
